@@ -4,6 +4,8 @@ import numpy as np
 import cmath
 from Selection_Sort import Selection_Sort
 from quantile import quantile
+from utility import find_mean, find_std, count, find_min, find_max
+
 
 # if len(sys.argv) > 1:
 #     fileName = sys.argv[1]
@@ -12,11 +14,11 @@ from quantile import quantile
 
 # # Load up the csv
 # df = pd.read_csv(fileName)
-df = pd.read_csv("dataset_train.csv")
+df = pd.read_csv("dataset_train2.csv")
 print(df.describe())
 
 # Remove NaN values from all rows
-df.fillna(0, inplace=True)
+# df.fillna(0, inplace=True)
 
 # All the required values to Mimic Describe methode
 ds_Names = []
@@ -36,67 +38,44 @@ numeric_data = df.select_dtypes(include=[np.number])
 
 # This will give you the name for all columns
 for column_name in numeric_data:
-    print(column_name)
+    # print(column_name)
 
     ds_Names.append(column_name)
 
-    ds_Count.append(df[column_name].size)
+    ds_Count.append(count(df[column_name]))
 
-    print('Index: ', f"{df[column_name].size:.6f}")
+    # print(ds_Names)
+    # print(ds_Count)
+
+
+
+
+
+
+
+    print('Index: ', f"{count(df[column_name]):.6f}")
     
-    find_mean = 0
-    for value in df[column_name].values:
-        find_mean += value
+    ds_Mean = find_mean(df[column_name].values)
 
-    ds_Mean = find_mean / df[column_name].size
     print('mean is: ', f"{ds_Mean:.6f}")
-    
-    # or just use this but you know
-    # print('mean is: ', f"{df[column_name].mean():.6f}")
 
-    sum_variance = 0
-    for value in df[column_name].values:
-
-        # Subtract the mean from the value
-        find_std = value - ds_Mean
-
-        # Square it
-        Square_std = find_std * find_std
-
-        # Sum it to average it in the next step
-        sum_variance += Square_std
-    
-    # Average the squared deviations (variance)
-    variance = sum_variance / (df[column_name].size - 1)
-
-    # Square root it to get out STD final value
-    ds_Std =variance ** 0.5
+    ds_Std = find_std(df[column_name].values)
 
     print('STD: ', f"{ds_Std:.6f}")
 
-    # ds_Min = df[column_name].values.min()
-
-    # Init the first one with fist value
-    ds_Min = df[column_name].values[0]
-    ds_Max = df[column_name].values[0]
-
-    # Search for Min and Max values
-    for value in df[column_name].values:
-        if value < ds_Min:
-            ds_Min = value
-        elif value > ds_Max:
-            ds_Max = value
+    ds_Min = find_min(df[column_name].values)
 
     print("Min: ", f"{ds_Min:.6f}")
 
+    ds_Max = find_max(df[column_name].values)
+
     print("Max: ", f"{ds_Max:.6f}")
 
-    # Sort a copy of our array values
-    sorted_ele = np.array(Selection_Sort(df[column_name].values.copy()))
 
-    ds_25 = quantile(sorted_ele, 0.25)
-    ds_50 = quantile(sorted_ele, 0.50)
-    ds_75 = quantile(sorted_ele, 0.75)
+
+    ds_25 = quantile(df[column_name], 0.25)
+    ds_50 = quantile(df[column_name], 0.50)
+    ds_75 = quantile(df[column_name], 0.75)
 
     print("25%", f"{ds_25:.6f}")
     print("50%", f"{ds_50:.6f}")
