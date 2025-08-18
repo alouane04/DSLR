@@ -2,6 +2,8 @@ import pandas as pd
 import sys
 import numpy as np
 import cmath
+from Selection_Sort import Selection_Sort
+from quantile import quantile
 
 # if len(sys.argv) > 1:
 #     fileName = sys.argv[1]
@@ -10,13 +12,14 @@ import cmath
 
 # # Load up the csv
 # df = pd.read_csv(fileName)
-df = pd.read_csv("dataset_train2.csv")
+df = pd.read_csv("dataset_train.csv")
 print(df.describe())
 
 # Remove NaN values from all rows
 df.fillna(0, inplace=True)
 
 # All the required values to Mimic Describe methode
+ds_Names = []
 ds_Count = []
 ds_Mean = 0
 ds_Std = 0
@@ -31,10 +34,15 @@ ds_Max = 0
 numeric_data = df.select_dtypes(include=[np.number])
 
 
-# This will give you the count for all columns
+# This will give you the name for all columns
 for column_name in numeric_data:
     print(column_name)
-    print('count: ', float(df[column_name].size))
+
+    ds_Names.append(column_name)
+
+    ds_Count.append(df[column_name].size)
+
+    print('Index: ', f"{df[column_name].size:.6f}")
     
     find_mean = 0
     for value in df[column_name].values:
@@ -66,11 +74,30 @@ for column_name in numeric_data:
 
     print('STD: ', f"{ds_Std:.6f}")
 
-    ds_Min = df[column_name].values.min()
+    # ds_Min = df[column_name].values.min()
+
+    # Init the first one with fist value
+    ds_Min = df[column_name].values[0]
+    ds_Max = df[column_name].values[0]
+
+    # Search for Min and Max values
+    for value in df[column_name].values:
+        if value < ds_Min:
+            ds_Min = value
+        elif value > ds_Max:
+            ds_Max = value
 
     print("Min: ", f"{ds_Min:.6f}")
 
-    ds_Max = df[column_name].values.max()
-
     print("Max: ", f"{ds_Max:.6f}")
 
+    # Sort a copy of our array values
+    sorted_ele = np.array(Selection_Sort(df[column_name].values.copy()))
+
+    ds_25 = quantile(sorted_ele, 0.25)
+    ds_50 = quantile(sorted_ele, 0.50)
+    ds_75 = quantile(sorted_ele, 0.75)
+
+    print("25%", f"{ds_25:.6f}")
+    print("50%", f"{ds_50:.6f}")
+    print("75%", f"{ds_75:.6f}")

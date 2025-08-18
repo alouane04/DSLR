@@ -1,18 +1,18 @@
 import numpy as np
-import pandas as pd
-import sys
-import numpy as np
-import cmath
-
-data = [2, 8, 9, 4, 10, 6]
-data = sorted(data)   # Step 1: sort
-n = len(data)
 
 def quantile(data, q):
-    # Step 2: find position
+    
+    # Step 1: Get n Len
+    n = len(data)
+
+    # Step 2: find position with formula  pos = (n − 1) × q
     pos = (n - 1) * q
+
+    # Step 3: Get lower and upper ex: 1,25 == L = 1, U = 2
     lower = int(np.floor(pos))
     upper = int(np.ceil(pos))
+
+    # This give you the decimal for our ex is 0,25
     fraction = pos - lower   # the "decimal part"
 
     if lower == upper: # Mean that there is no fraction
@@ -21,10 +21,3 @@ def quantile(data, q):
     else:
         # interpolate between data[lower] and data[upper]
         return data[lower] + fraction * (data[upper] - data[lower])
-
-print("Q1:", quantile(data, 0.25))
-print("Q2:", quantile(data, 0.50))
-print("Q3:", quantile(data, 0.75))
-
-df = pd.read_csv("dataset_train2.csv")
-print(df.describe())
