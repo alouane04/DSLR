@@ -36,13 +36,18 @@ ds_75s = []
 ds_Maxs = []
 
 big_lens = []
-index = 0
+# index = 0
 
     
 # This will give you the name for all columns
-for column_name in numeric_datas:
+for index, column_name in enumerate(numeric_datas):
 
     big_len = 0
+    decimals = 6
+
+    # If it's firt iteration
+    if index == 0:
+        decimals = 5
 
 
     ds_Names.append(column_name)
@@ -52,56 +57,56 @@ for column_name in numeric_datas:
         if "-" in column_name:
             big_len -= 1
 
-    ds_Counts.append(f"{count(df[column_name]):.6f}")
+    ds_Counts.append(f"{count(df[column_name]):.{decimals}f}")
 
     if len(ds_Counts[index]) > big_len:
         big_len = len(ds_Counts[index])
         if "-" in ds_Counts[index]:
             big_len -= 1
     
-    ds_Means.append(f"{find_mean(df[column_name].values):.6f}")
+    ds_Means.append(f"{find_mean(df[column_name].values):.{decimals}f}")
 
     if len(ds_Means[index]) > big_len:
         big_len = len(ds_Means[index])
         if "-" in ds_Means[index]:
             big_len -= 1
 
-    ds_Stds.append(f"{find_std(df[column_name].values):.6f}")
+    ds_Stds.append(f"{find_std(df[column_name].values):.{decimals}f}")
 
     if len(ds_Stds[index]) > big_len:
         big_len = len(ds_Stds[index])
         if "-" in ds_Stds[index]:
             big_len -= 1
 
-    ds_Mins.append(f"{find_min(df[column_name].values):.6f}")
+    ds_Mins.append(f"{find_min(df[column_name].values):.{decimals}f}")
 
     if len(ds_Mins[index]) > big_len:
         big_len = len(ds_Mins[index])
         if "-" in ds_Mins[index]:
             big_len -= 1
 
-    ds_Maxs.append(f"{find_max(df[column_name].values):.6f}")
+    ds_Maxs.append(f"{find_max(df[column_name].values):.{decimals}f}")
 
     if len(ds_Maxs[index]) > big_len:
         big_len = len(ds_Maxs[index])
         if "-" in ds_Maxs[index]:
             big_len -= 1
 
-    ds_25s.append(f"{quantile(df[column_name], 0.25):.6f}")
+    ds_25s.append(f"{quantile(df[column_name], 0.25):.{decimals}f}")
 
     if len(ds_25s[index]) > big_len:
         big_len = len(ds_25s[index])
         if "-" in ds_25s[index]:
             big_len -= 1
 
-    ds_50s.append(f"{quantile(df[column_name], 0.50):.6f}")
+    ds_50s.append(f"{quantile(df[column_name], 0.50):.{decimals}f}")
 
     if len(ds_50s[index]) > big_len:
         big_len = len(ds_50s[index])
         if "-" in ds_50s[index]:
             big_len -= 1
 
-    ds_75s.append(f"{quantile(df[column_name], 0.75):.6f}")
+    ds_75s.append(f"{quantile(df[column_name], 0.75):.{decimals}f}")
 
     if len(ds_75s[index]) > big_len:
         big_len = len(ds_75s[index])
@@ -126,54 +131,103 @@ for ds_name, big_len in zip(ds_Names, big_lens):
     
     # Check if it's the first loop
     if ds_name == ds_Names[0]:
-        space = big_len - len(ds_name) + 6
-    elif "-" in ds_name:
-        space = big_len - len(ds_name) + 1
+        space = big_len - len(ds_name) + 7
     else:
         space = big_len - len(ds_name) + 2
 
     line += " " * space + ds_name
 
+
+line += "\ncount"
+for ds_count, big_len in zip(ds_Counts, big_lens):
+        
+    space = big_len - len(ds_count) + 2
+
+    line += " " * space + ds_count
+
+
+line += "\nmean"
+for ds_mean, big_len in zip(ds_Means, big_lens):
+
+    if ds_mean == ds_Means[0]:
+    # 5       9              7    
+        space = big_len - len(ds_mean) + 3
+    else:
+        space = big_len - len(ds_mean) + 2
+
+    line += " " * space + ds_mean
+
+
+line += "\nstd"
+for ds_std, big_len in zip(ds_Stds, big_lens):
+
+    if ds_std == ds_Stds[0]:
+    # 5       9              7    
+        space = big_len - len(ds_std) + 4
+    else:
+        space = big_len - len(ds_std) + 2
+
+    line += " " * space + ds_std
+
+
+line += "\nmin"
+for ds_min, big_len in zip(ds_Mins, big_lens):
+
+    if ds_min == ds_Mins[0]:
+    # 5       9              7    
+        space = big_len - len(ds_min) + 4
+    else:
+        space = big_len - len(ds_min) + 2
+
+    line += " " * space + ds_min
+
+
+line += "\n25%"
+for ds_25, big_len in zip(ds_25s, big_lens):
+
+    if ds_25 == ds_25s[0]:
+    # 5       9              7    
+        space = big_len - len(ds_25) + 4
+    else:
+        space = big_len - len(ds_25) + 2
+
+    line += " " * space + ds_25
+
+
+line += "\n50%"
+for ds_50, big_len in zip(ds_50s, big_lens):
+
+    if ds_50 == ds_50s[0]:
+    # 5       9              7    
+        space = big_len - len(ds_50) + 4
+    else:
+        space = big_len - len(ds_50) + 2
+
+    line += " " * space + ds_50
+
+
+line += "\n25%"
+for ds_75, big_len in zip(ds_75s, big_lens):
+
+    if ds_75 == ds_75s[0]:
+    # 5       9              7    
+        space = big_len - len(ds_75) + 4
+    else:
+        space = big_len - len(ds_75) + 2
+
+    line += " " * space + ds_75
+
+
+line += "\nmax"
+for ds_max, big_len in zip(ds_Maxs, big_lens):
+
+    if ds_max == ds_Maxs[0]:
+    # 5       9              7    
+        space = big_len - len(ds_max) + 4
+    else:
+        space = big_len - len(ds_max) + 2
+
+    line += " " * space + ds_max
+
+
 print(line)
-
-#     if ds
-# for i in range(len(ds_Names)):
-#     big_len = 0
-
-#     if len(ds_Names[i]) > big_len:
-#         big_len = ds_Names[i]
-#     if len(ds_Counts[i]) > big_len:
-#         big_len = ds_Counts[i]
-#     if len(ds_Means[i]) > big_len:
-#         big_len = ds_Means[i]
-#     if len(ds_Stds[i]) > big_len:
-#         big_len = ds_Stds[i]
-#     if len(ds_Mins[i]) > big_len:
-#         big_len = ds_Mins[i]
-#     if len(ds_25s[i]) > big_len:
-#         big_len = ds_25s[i]
-#     if len(ds_50s[i]) > big_len:
-#         big_len = ds_50s[i]
-#     if len(ds_75s[i]) > big_len:
-#         big_len = ds_75s[i]
-#     if len(ds_Maxs[i]) > big_len:
-#         big_len = ds_Maxs[i]
-    
-#     # if i is not 0:
-#     print(" " * 7)
-
-
-
-# for i in 
-#     # Print first row
-#     print("" * 7)
-
-#           Index    Arithmancy   Astronomy  Herbology  Defense Agai
-# count  6.000000      6.000000    6.000000   6.000000      5.000000
-# mean   2.500000  43893.166667 -147.531976  -1.857047      2.643934
-# std    1.870829  20336.363661  565.765109   6.773587      5.456081
-# min    0.000000  21209.000000 -613.687160  -7.820623     -6.977428
-# 25%    1.250000  25943.250000 -536.016902  -6.369772      3.660761
-# 50%    2.500000  45525.500000 -426.981101  -5.138321      4.878861
-# 75%    3.750000  59714.500000  236.062373   3.223086      5.520605
-# max    5.000000  67239.000000  697.742809   7.725017      6.136872
