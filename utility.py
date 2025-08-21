@@ -30,7 +30,7 @@ def find_mean(values):
             total += value
             n += 1
 
-    return total / n if n > 0 else float("nan")
+    return total / n if n > 0 else float("NaN")
 
 
 def find_std(values):
@@ -54,17 +54,20 @@ def find_std(values):
 
             n += 1
     
-    # Average the squared deviations (variance)
-    variance = total / (n - 1)
+    if n > 1:
+        # Average the squared deviations (variance)
+        variance = total / (n - 1)
+    else:
+        return float("NaN")
 
     # Square root it to get out STD final value
-    return variance ** 0.5 if n > 1 else float("nan")
+    return variance ** 0.5 if n > 1 else float("NaN")
 
 
 def find_min(values):
     
     if len(values) == 0:
-        return float("nan")
+        return float("NaN")
 
     ds_min = values[0]
 
@@ -79,7 +82,7 @@ def find_min(values):
 def find_max(values):
     
     if len(values) == 0:
-        return float("nan")
+        return float("NaN")
 
     ds_max = values[0]
 
