@@ -1,20 +1,17 @@
 import pandas as pd
 import sys
 import numpy as np
-import cmath
-from Selection_Sort import Selection_Sort
 from quantile import quantile
 from utility import find_mean, find_std, count, find_min, find_max
 
 
-# if len(sys.argv) > 1:
-#     fileName = sys.argv[1]
-# else:
-#     print("Error: No csv fileName was given")
+if len(sys.argv) > 1:
+    fileName = sys.argv[1]
+else:
+    print("Error: No csv fileName was given")
 
-# # Load up the csv
-# df = pd.read_csv(fileName)
-df = pd.read_csv("dataset_train2.csv")
+# Load up the csv
+df = pd.read_csv(fileName)
 
 print(df.describe())
 
@@ -35,8 +32,8 @@ ds_50s = []
 ds_75s = []
 ds_Maxs = []
 
+# Collect the biggest len in the column
 big_lens = []
-# index = 0
 
     
 # This will give you the name for all columns
@@ -45,7 +42,7 @@ for index, column_name in enumerate(numeric_datas):
     big_len = 0
     decimals = 6
 
-    # If it's firt iteration
+    # If it's firt iteration make the decimals just 5
     if index == 0:
         decimals = 5
 
@@ -116,14 +113,6 @@ for index, column_name in enumerate(numeric_datas):
     index += 1
     big_lens.append(big_len)
 
-print('test')
-
-# if "-" in data:
-#     index -= 1
-
-
-# for ds_name, ds_Count, ds_Mean, ds_Std, ds_Min, ds_25, ds_50, ds_75, ds_Max\
-#     in ds_Names, ds_Counts, ds_Means, ds_Stds, ds_Mins, ds_25s, ds_50s, ds_75s, ds_Maxs:
 
 line = ""
 
