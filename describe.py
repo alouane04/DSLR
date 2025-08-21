@@ -1,25 +1,10 @@
 import pandas as pd
+from pandas import DataFrame
 import sys
 import numpy as np
 from quantile import quantile
 from utility import find_mean, find_std, count, find_min, find_max
 
-
-if len(sys.argv) > 1:
-    fileName = sys.argv[1]
-else:
-    print("Error: No csv fileName was given")
-
-# Load up the csv
-df = pd.read_csv(fileName)
-
-print(df.describe())
-
-# Filter the numeric columns only
-numeric_datas = df.select_dtypes(include=[np.number])
-
-# Remove NaN values from all rows
-# df.fillna(0, inplace=True)
 
 # All the required values to Mimic Describe methode
 ds_Names = []
@@ -35,188 +20,227 @@ ds_Maxs = []
 # Collect the biggest len in the column
 big_lens = []
 
-    
-# This will give you the name for all columns
-for index, column_name in enumerate(numeric_datas):
 
-    big_len = 0
-    decimals = 6
+def calc_data(df: DataFrame, numeric_datas: DataFrame):
 
-    # If it's firt iteration make the decimals just 5
-    if index == 0:
-        decimals = 5
+    # This will give you the name for all columns
+    for index, column_name in enumerate(numeric_datas):
 
+        big_len = 0
+        decimals = 6
 
-    ds_Names.append(column_name)
-
-    if len(column_name) > big_len:
-        big_len = len(column_name)
-        if "-" in column_name:
-            big_len -= 1
-
-    ds_Counts.append(f"{count(df[column_name]):.{decimals}f}")
-
-    if len(ds_Counts[index]) > big_len:
-        big_len = len(ds_Counts[index])
-        if "-" in ds_Counts[index]:
-            big_len -= 1
-    
-    ds_Means.append(f"{find_mean(df[column_name].values):.{decimals}f}")
-
-    if len(ds_Means[index]) > big_len:
-        big_len = len(ds_Means[index])
-        if "-" in ds_Means[index]:
-            big_len -= 1
-
-    ds_Stds.append(f"{find_std(df[column_name].values):.{decimals}f}")
-
-    if len(ds_Stds[index]) > big_len:
-        big_len = len(ds_Stds[index])
-        if "-" in ds_Stds[index]:
-            big_len -= 1
-
-    ds_Mins.append(f"{find_min(df[column_name].values):.{decimals}f}")
-
-    if len(ds_Mins[index]) > big_len:
-        big_len = len(ds_Mins[index])
-        if "-" in ds_Mins[index]:
-            big_len -= 1
-
-    ds_Maxs.append(f"{find_max(df[column_name].values):.{decimals}f}")
-
-    if len(ds_Maxs[index]) > big_len:
-        big_len = len(ds_Maxs[index])
-        if "-" in ds_Maxs[index]:
-            big_len -= 1
-
-    ds_25s.append(f"{quantile(df[column_name], 0.25):.{decimals}f}")
-
-    if len(ds_25s[index]) > big_len:
-        big_len = len(ds_25s[index])
-        if "-" in ds_25s[index]:
-            big_len -= 1
-
-    ds_50s.append(f"{quantile(df[column_name], 0.50):.{decimals}f}")
-
-    if len(ds_50s[index]) > big_len:
-        big_len = len(ds_50s[index])
-        if "-" in ds_50s[index]:
-            big_len -= 1
-
-    ds_75s.append(f"{quantile(df[column_name], 0.75):.{decimals}f}")
-
-    if len(ds_75s[index]) > big_len:
-        big_len = len(ds_75s[index])
-        if "-" in ds_75s[index]:
-            big_len -= 1
-
-    index += 1
-    big_lens.append(big_len)
+        # If it's firt iteration make the decimals just 5
+        if index == 0:
+            decimals = 5
 
 
-line = ""
+        ds_Names.append(column_name)
 
-for ds_name, big_len in zip(ds_Names, big_lens):
-    
-    # Check if it's the first loop
-    if ds_name == ds_Names[0]:
-        space = big_len - len(ds_name) + 7
-    else:
-        space = big_len - len(ds_name) + 2
+        if len(column_name) > big_len:
+            big_len = len(column_name)
+            if "-" in column_name:
+                big_len -= 1
 
-    line += " " * space + ds_name
+        ds_Counts.append(f"{count(df[column_name]):.{decimals}f}")
 
-
-line += "\ncount"
-for ds_count, big_len in zip(ds_Counts, big_lens):
+        if len(ds_Counts[index]) > big_len:
+            big_len = len(ds_Counts[index])
+            if "-" in ds_Counts[index]:
+                big_len -= 1
         
-    space = big_len - len(ds_count) + 2
+        ds_Means.append(f"{find_mean(df[column_name].values):.{decimals}f}")
 
-    line += " " * space + ds_count
+        if len(ds_Means[index]) > big_len:
+            big_len = len(ds_Means[index])
+            if "-" in ds_Means[index]:
+                big_len -= 1
+
+        ds_Stds.append(f"{find_std(df[column_name].values):.{decimals}f}")
+
+        if len(ds_Stds[index]) > big_len:
+            big_len = len(ds_Stds[index])
+            if "-" in ds_Stds[index]:
+                big_len -= 1
+
+        ds_Mins.append(f"{find_min(df[column_name].values):.{decimals}f}")
+
+        if len(ds_Mins[index]) > big_len:
+            big_len = len(ds_Mins[index])
+            if "-" in ds_Mins[index]:
+                big_len -= 1
+
+        ds_Maxs.append(f"{find_max(df[column_name].values):.{decimals}f}")
+
+        if len(ds_Maxs[index]) > big_len:
+            big_len = len(ds_Maxs[index])
+            if "-" in ds_Maxs[index]:
+                big_len -= 1
+
+        ds_25s.append(f"{quantile(df[column_name], 0.25):.{decimals}f}")
+
+        if len(ds_25s[index]) > big_len:
+            big_len = len(ds_25s[index])
+            if "-" in ds_25s[index]:
+                big_len -= 1
+
+        ds_50s.append(f"{quantile(df[column_name], 0.50):.{decimals}f}")
+
+        if len(ds_50s[index]) > big_len:
+            big_len = len(ds_50s[index])
+            if "-" in ds_50s[index]:
+                big_len -= 1
+
+        ds_75s.append(f"{quantile(df[column_name], 0.75):.{decimals}f}")
+
+        if len(ds_75s[index]) > big_len:
+            big_len = len(ds_75s[index])
+            if "-" in ds_75s[index]:
+                big_len -= 1
+
+        index += 1
+        big_lens.append(big_len)
 
 
-line += "\nmean"
-for ds_mean, big_len in zip(ds_Means, big_lens):
 
-    if ds_mean == ds_Means[0]:
-    # 5       9              7    
-        space = big_len - len(ds_mean) + 3
+
+def generate_line():
+    line: str = ""
+
+    for ds_name, big_len in zip(ds_Names, big_lens):
+        
+        # Check if it's the first loop
+        if ds_name == ds_Names[0]:
+            space = big_len - len(ds_name) + 7
+        else:
+            space = big_len - len(ds_name) + 2
+
+        line += " " * space + ds_name
+
+
+    line += "\ncount"
+    for ds_count, big_len in zip(ds_Counts, big_lens):
+            
+        space = big_len - len(ds_count) + 2
+
+        line += " " * space + ds_count
+
+
+    line += "\nmean"
+    for ds_mean, big_len in zip(ds_Means, big_lens):
+
+        # Check if it's the first loop
+        if ds_mean == ds_Means[0]:
+            space = big_len - len(ds_mean) + 3
+        else:
+            space = big_len - len(ds_mean) + 2
+
+        line += " " * space + ds_mean
+
+
+    line += "\nstd"
+    for ds_std, big_len in zip(ds_Stds, big_lens):
+
+        # Check if it's the first loop
+        if ds_std == ds_Stds[0]:
+            space = big_len - len(ds_std) + 4
+        else:
+            space = big_len - len(ds_std) + 2
+
+        line += " " * space + ds_std
+
+
+    line += "\nmin"
+    for ds_min, big_len in zip(ds_Mins, big_lens):
+
+        # Check if it's the first loop
+        if ds_min == ds_Mins[0]:
+            space = big_len - len(ds_min) + 4
+        else:
+            space = big_len - len(ds_min) + 2
+
+        line += " " * space + ds_min
+
+
+    line += "\n25%"
+    for ds_25, big_len in zip(ds_25s, big_lens):
+
+        # Check if it's the first loop
+        if ds_25 == ds_25s[0]:
+            space = big_len - len(ds_25) + 4
+        else:
+            space = big_len - len(ds_25) + 2
+
+        line += " " * space + ds_25
+
+
+    line += "\n50%"
+    for ds_50, big_len in zip(ds_50s, big_lens):
+
+        # Check if it's the first loop
+        if ds_50 == ds_50s[0]:
+            space = big_len - len(ds_50) + 4
+        else:
+            space = big_len - len(ds_50) + 2
+
+        line += " " * space + ds_50
+
+
+    line += "\n25%"
+    for ds_75, big_len in zip(ds_75s, big_lens):
+
+        # Check if it's the first loop
+        if ds_75 == ds_75s[0]:
+            space = big_len - len(ds_75) + 4
+        else:
+            space = big_len - len(ds_75) + 2
+
+        line += " " * space + ds_75
+
+
+    line += "\nmax"
+    for ds_max, big_len in zip(ds_Maxs, big_lens):
+
+        # Check if it's the first loop
+        if ds_max == ds_Maxs[0]:
+            space = big_len - len(ds_max) + 4
+        else:
+            space = big_len - len(ds_max) + 2
+
+        line += " " * space + ds_max
+    
+    return line
+
+
+if __name__ == "__main__":
+
+    if len(sys.argv) > 1:
+        fileName = sys.argv[1]
     else:
-        space = big_len - len(ds_mean) + 2
+        print("Error: No csv fileName was given")
 
-    line += " " * space + ds_mean
+    # Load up the csv
+    df = pd.read_csv(fileName)
 
+    print(df.describe())
 
-line += "\nstd"
-for ds_std, big_len in zip(ds_Stds, big_lens):
+    # Filter the numeric columns only
+    numeric_datas = df.select_dtypes(include=[np.number])
 
-    if ds_std == ds_Stds[0]:
-    # 5       9              7    
-        space = big_len - len(ds_std) + 4
-    else:
-        space = big_len - len(ds_std) + 2
+    # Remove NaN values from all rows
+    # df.fillna(0, inplace=True)
 
-    line += " " * space + ds_std
-
-
-line += "\nmin"
-for ds_min, big_len in zip(ds_Mins, big_lens):
-
-    if ds_min == ds_Mins[0]:
-    # 5       9              7    
-        space = big_len - len(ds_min) + 4
-    else:
-        space = big_len - len(ds_min) + 2
-
-    line += " " * space + ds_min
+    
+    # Calculates statistical values for each numeric column in a DataFrame
+    calc_data(df, numeric_datas)
 
 
-line += "\n25%"
-for ds_25, big_len in zip(ds_25s, big_lens):
+    # The line `line = generate_line()` is calling the `generate_line()` function to create a
+    # formatted string that represents the statistical summary of the numeric columns in a DataFrame.
+    # The `generate_line()` function constructs this summary by aligning the column names and their
+    # corresponding statistical values (count, mean, std, min, 25%, 50%, 75%, max) in a visually
+    # appealing tabular format. The resulting `line` string contains this formatted summary
+    # information.
+    line = generate_line()
 
-    if ds_25 == ds_25s[0]:
-    # 5       9              7    
-        space = big_len - len(ds_25) + 4
-    else:
-        space = big_len - len(ds_25) + 2
-
-    line += " " * space + ds_25
-
-
-line += "\n50%"
-for ds_50, big_len in zip(ds_50s, big_lens):
-
-    if ds_50 == ds_50s[0]:
-    # 5       9              7    
-        space = big_len - len(ds_50) + 4
-    else:
-        space = big_len - len(ds_50) + 2
-
-    line += " " * space + ds_50
-
-
-line += "\n25%"
-for ds_75, big_len in zip(ds_75s, big_lens):
-
-    if ds_75 == ds_75s[0]:
-    # 5       9              7    
-        space = big_len - len(ds_75) + 4
-    else:
-        space = big_len - len(ds_75) + 2
-
-    line += " " * space + ds_75
-
-
-line += "\nmax"
-for ds_max, big_len in zip(ds_Maxs, big_lens):
-
-    if ds_max == ds_Maxs[0]:
-    # 5       9              7    
-        space = big_len - len(ds_max) + 4
-    else:
-        space = big_len - len(ds_max) + 2
-
-    line += " " * space + ds_max
-
-
-print(line)
+    # Mimic the decribe output format in this line
+    print(line)
