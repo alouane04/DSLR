@@ -40,6 +40,8 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             big_len = len(column_name)
             if "-" in column_name:
                 big_len -= 1
+        
+        print(1)
 
         ds_Counts.append(f"{count(df[column_name]):.{decimals}f}")
 
@@ -48,6 +50,7 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             if "-" in ds_Counts[index]:
                 big_len -= 1
         
+        print(2)
         ds_Means.append(f"{find_mean(df[column_name].values):.{decimals}f}")
 
         if len(ds_Means[index]) > big_len:
@@ -55,6 +58,7 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             if "-" in ds_Means[index]:
                 big_len -= 1
 
+        print(3)
         ds_Stds.append(f"{find_std(df[column_name].values):.{decimals}f}")
 
         if len(ds_Stds[index]) > big_len:
@@ -62,6 +66,7 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             if "-" in ds_Stds[index]:
                 big_len -= 1
 
+        print(4)
         ds_Mins.append(f"{find_min(df[column_name].values):.{decimals}f}")
 
         if len(ds_Mins[index]) > big_len:
@@ -69,12 +74,14 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             if "-" in ds_Mins[index]:
                 big_len -= 1
 
+        print(5)
         ds_Maxs.append(f"{find_max(df[column_name].values):.{decimals}f}")
 
         if len(ds_Maxs[index]) > big_len:
             big_len = len(ds_Maxs[index])
             if "-" in ds_Maxs[index]:
                 big_len -= 1
+        print(6)
 
         ds_25s.append(f"{quantile(df[column_name], 0.25):.{decimals}f}")
 
@@ -83,6 +90,7 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             if "-" in ds_25s[index]:
                 big_len -= 1
 
+        print(7)
         ds_50s.append(f"{quantile(df[column_name], 0.50):.{decimals}f}")
 
         if len(ds_50s[index]) > big_len:
@@ -90,6 +98,7 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             if "-" in ds_50s[index]:
                 big_len -= 1
 
+        print(8)
         ds_75s.append(f"{quantile(df[column_name], 0.75):.{decimals}f}")
 
         if len(ds_75s[index]) > big_len:
@@ -97,6 +106,7 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             if "-" in ds_75s[index]:
                 big_len -= 1
 
+        print(9)
         index += 1
         big_lens.append(big_len)
 
@@ -106,7 +116,7 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
 def generate_line():
     line: str = ""
 
-    for ds_name, big_len in zip(ds_Names, big_lens):
+    for index, (ds_name, big_len) in enumerate(zip(ds_Names, big_lens)):
         
         # Check if it's the first loop
         if ds_name == ds_Names[0]:
@@ -115,6 +125,8 @@ def generate_line():
             space = big_len - len(ds_name) + 2
 
         line += " " * space + ds_name
+
+        # print(line)
 
 
     line += "\ncount"
@@ -126,7 +138,7 @@ def generate_line():
 
 
     line += "\nmean"
-    for ds_mean, big_len in zip(ds_Means, big_lens):
+    for index, (ds_mean, big_len) in enumerate(zip(ds_Means, big_lens)):
 
         # Check if it's the first loop
         if ds_mean == ds_Means[0]:
@@ -138,19 +150,20 @@ def generate_line():
 
 
     line += "\nstd"
-    for ds_std, big_len in zip(ds_Stds, big_lens):
+    for index, (ds_std, big_len) in enumerate(zip(ds_Stds, big_lens)):
 
         # Check if it's the first loop
-        if ds_std == ds_Stds[0]:
+        if index == 0:
             space = big_len - len(ds_std) + 4
         else:
             space = big_len - len(ds_std) + 2
 
         line += " " * space + ds_std
+        # print(line)
 
 
     line += "\nmin"
-    for ds_min, big_len in zip(ds_Mins, big_lens):
+    for index, (ds_min, big_len) in enumerate(zip(ds_Mins, big_lens)):
 
         # Check if it's the first loop
         if ds_min == ds_Mins[0]:
@@ -162,7 +175,7 @@ def generate_line():
 
 
     line += "\n25%"
-    for ds_25, big_len in zip(ds_25s, big_lens):
+    for index, (ds_25, big_len) in enumerate(zip(ds_25s, big_lens)):
 
         # Check if it's the first loop
         if ds_25 == ds_25s[0]:
@@ -174,7 +187,7 @@ def generate_line():
 
 
     line += "\n50%"
-    for ds_50, big_len in zip(ds_50s, big_lens):
+    for index, (ds_50, big_len) in enumerate(zip(ds_50s, big_lens)):
 
         # Check if it's the first loop
         if ds_50 == ds_50s[0]:
@@ -186,7 +199,7 @@ def generate_line():
 
 
     line += "\n25%"
-    for ds_75, big_len in zip(ds_75s, big_lens):
+    for index, (ds_75, big_len) in enumerate(zip(ds_75s, big_lens)):
 
         # Check if it's the first loop
         if ds_75 == ds_75s[0]:
@@ -198,7 +211,7 @@ def generate_line():
 
 
     line += "\nmax"
-    for ds_max, big_len in zip(ds_Maxs, big_lens):
+    for index, (ds_max, big_len) in enumerate(zip(ds_Maxs, big_lens)):
 
         # Check if it's the first loop
         if ds_max == ds_Maxs[0]:
@@ -213,15 +226,15 @@ def generate_line():
 
 if __name__ == "__main__":
 
-    if len(sys.argv) > 1:
-        fileName = sys.argv[1]
-    else:
-        print("Error: No csv fileName was given")
+    # if len(sys.argv) > 1:
+    #     fileName = sys.argv[1]
+    # else:
+    #     print("Error: No csv fileName was given")
 
     # Load up the csv
-    df = pd.read_csv(fileName)
+    # df = pd.read_csv(fileName)
+    df = pd.read_csv("dataset_train.csv")
 
-    print(df.describe())
 
     # Filter the numeric columns only
     numeric_datas = df.select_dtypes(include=[np.number])
@@ -229,10 +242,12 @@ if __name__ == "__main__":
     # Remove NaN values from all rows
     # df.fillna(0, inplace=True)
 
+    print(df.describe())
     
     # Calculates statistical values for each numeric column in a DataFrame
     calc_data(df, numeric_datas)
 
+    print('test')
 
     # The line `line = generate_line()` is calling the `generate_line()` function to create a
     # formatted string that represents the statistical summary of the numeric columns in a DataFrame.
