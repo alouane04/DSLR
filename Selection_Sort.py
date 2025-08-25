@@ -1,4 +1,6 @@
+from numba import njit
 
+@njit
 def Selection_Sort(array):
     n = len(array)
 

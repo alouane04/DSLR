@@ -2,12 +2,14 @@ import numpy as np
 from pandas import DataFrame
 from Selection_Sort import Selection_Sort
 from utility import count, remove_nan
+from numba import njit
 
 
-def quantile(data: DataFrame, q):
+@njit
+def quantile(data: np.ndarray, q):
 
     # Sort the element and make a copy from the original FataFrame
-    sorted_ele = np.array(Selection_Sort(data.copy()))
+    sorted_ele = Selection_Sort(data.copy())
 
     # Remove the nan from the column
     clean_data = remove_nan(sorted_ele)
