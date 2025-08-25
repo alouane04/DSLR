@@ -4,6 +4,7 @@ import sys
 import numpy as np
 from quantile import quantile
 from utility import find_mean, find_std, count, find_min, find_max
+import time
 
 
 # All the required values to Mimic Describe methode
@@ -40,17 +41,14 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             big_len = len(column_name)
             if "-" in column_name:
                 big_len -= 1
-        
-        print(1)
 
-        ds_Counts.append(f"{count(df[column_name]):.{decimals}f}")
+        ds_Counts.append(f"{count(df[column_name].values):.{decimals}f}")
 
         if len(ds_Counts[index]) > big_len:
             big_len = len(ds_Counts[index])
             if "-" in ds_Counts[index]:
                 big_len -= 1
         
-        print(2)
         ds_Means.append(f"{find_mean(df[column_name].values):.{decimals}f}")
 
         if len(ds_Means[index]) > big_len:
@@ -58,7 +56,6 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             if "-" in ds_Means[index]:
                 big_len -= 1
 
-        print(3)
         ds_Stds.append(f"{find_std(df[column_name].values):.{decimals}f}")
 
         if len(ds_Stds[index]) > big_len:
@@ -66,7 +63,6 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             if "-" in ds_Stds[index]:
                 big_len -= 1
 
-        print(4)
         ds_Mins.append(f"{find_min(df[column_name].values):.{decimals}f}")
 
         if len(ds_Mins[index]) > big_len:
@@ -74,39 +70,34 @@ def calc_data(df: DataFrame, numeric_datas: DataFrame):
             if "-" in ds_Mins[index]:
                 big_len -= 1
 
-        print(5)
         ds_Maxs.append(f"{find_max(df[column_name].values):.{decimals}f}")
 
         if len(ds_Maxs[index]) > big_len:
             big_len = len(ds_Maxs[index])
             if "-" in ds_Maxs[index]:
                 big_len -= 1
-        print(6)
 
-        ds_25s.append(f"{quantile(df[column_name], 0.25):.{decimals}f}")
+        ds_25s.append(f"{quantile(df[column_name].values.astype(np.float64), 0.25):.{decimals}f}")
 
         if len(ds_25s[index]) > big_len:
             big_len = len(ds_25s[index])
             if "-" in ds_25s[index]:
                 big_len -= 1
 
-        print(7)
-        ds_50s.append(f"{quantile(df[column_name], 0.50):.{decimals}f}")
+        ds_50s.append(f"{quantile(df[column_name].values.astype(np.float64), 0.50):.{decimals}f}")
 
         if len(ds_50s[index]) > big_len:
             big_len = len(ds_50s[index])
             if "-" in ds_50s[index]:
                 big_len -= 1
 
-        print(8)
-        ds_75s.append(f"{quantile(df[column_name], 0.75):.{decimals}f}")
+        ds_75s.append(f"{quantile(df[column_name].values.astype(np.float64), 0.75):.{decimals}f}")
 
         if len(ds_75s[index]) > big_len:
             big_len = len(ds_75s[index])
             if "-" in ds_75s[index]:
                 big_len -= 1
 
-        print(9)
         index += 1
         big_lens.append(big_len)
 
@@ -226,14 +217,13 @@ def generate_line():
 
 if __name__ == "__main__":
 
-    # if len(sys.argv) > 1:
-    #     fileName = sys.argv[1]
-    # else:
-    #     print("Error: No csv fileName was given")
+    if len(sys.argv) > 1:
+        fileName = sys.argv[1]
+    else:
+        print("Error: No csv fileName was given")
 
     # Load up the csv
-    # df = pd.read_csv(fileName)
-    df = pd.read_csv("dataset_train.csv")
+    df = pd.read_csv(fileName)
 
 
     # Filter the numeric columns only
@@ -244,10 +234,12 @@ if __name__ == "__main__":
 
     print(df.describe())
     
+    t1 = time.perf_counter()
     # Calculates statistical values for each numeric column in a DataFrame
     calc_data(df, numeric_datas)
 
-    print('test')
+    t2 = time.perf_counter()
+    print(f'\n\n Processing Took: {t2 - t1} seconds \n\n')
 
     # The line `line = generate_line()` is calling the `generate_line()` function to create a
     # formatted string that represents the statistical summary of the numeric columns in a DataFrame.
